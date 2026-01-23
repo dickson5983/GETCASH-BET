@@ -1,58 +1,145 @@
-import React from 'react';
-
-// This layout mimics the Linebet structure
-export default function MainLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col h-screen bg-[#f0f2f5] font-sans text-sm">
-      
-      {/* 1. TOP HEADER */}
-      <header className="h-14 bg-[#0d2d20] flex items-center px-4 text-white shrink-0">
-        <div className="font-bold text-xl tracking-tighter text-[#77d74f]">LINEBET</div>
-        <nav className="ml-8 space-x-4 hidden md:block">
-          <a href="#" className="hover:text-[#77d74f]">SPORTS</a>
-          <a href="#" className="hover:text-[#77d74f]">LIVE</a>
-          <a href="#" className="hover:text-[#77d74f]">CASINO</a>
-        </nav>
-        <div className="ml-auto flex gap-2">
-          <button className="px-4 py-1 border border-[#77d74f] text-[#77d74f] rounded">Log in</button>
-          <button className="px-4 py-1 bg-[#77d74f] text-black font-bold rounded">Registration</button>
-        </div>
-      </header>
-
-      {/* 2. MAIN 3-COLUMN CONTENT */}
-      <div className="flex flex-1 overflow-hidden">
-        
-        {/* LEFT SIDEBAR - SPORTS MENU */}
-        <aside className="w-64 bg-white border-r border-gray-300 overflow-y-auto hidden lg:block">
-          <div className="p-2 bg-gray-100 font-bold text-gray-700">TOP CHAMPIONSHIPS</div>
-          <ul className="divide-y">
-            {['Premier League', 'La Liga', 'Serie A', 'NBA', 'NHL'].map((league) => (
-              <li key={league} className="p-3 hover:bg-gray-100 cursor-pointer flex justify-between group">
-                <span className="group-hover:text-[#77d74f]">{league}</span>
-                <span className="text-gray-400 text-xs">Running</span>
-              </li>
-            ))}
-          </ul>
-        </aside>
-
-        {/* CENTER - THE ODDS FEED (Dynamic Content) */}
-        <main className="flex-1 overflow-y-auto bg-gray-200 p-2">
-           {/* This is where the Match Rows go */}
-           {children}
-        </main>
-
-        {/* RIGHT SIDEBAR - BET SLIP */}
-        <aside className="w-80 bg-white border-l border-gray-300 overflow-y-auto hidden xl:block shadow-lg z-10">
-          <div className="bg-[#77d74f] text-black font-bold p-3 text-center uppercase">
-            Bet Slip
-          </div>
-          <div className="p-4 text-center text-gray-500 mt-10">
-            <p>Your bet slip is empty.</p>
-            <p className="text-xs mt-2">Click on odds to add a selection.</p>
-          </div>
-        </aside>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - GETCASH Affiliate</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+  <style>
+    :root{--bg:#f6f8fa;--card:#ffffff;--accent:#00b894;--muted:#6b7280}
+    body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:#0f172a; margin:0}
+    header{background:linear-gradient(90deg,#06b6d4, #00b894); color:#fff; padding:22px 28px}
+    header h1{margin:0;font-size:20px}
+    .container{max-width:980px;margin:28px auto;padding:0 20px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:var(--card);border-radius:10px;padding:18px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
+    .metric{font-size:28px;font-weight:700}
+    .label{color:var(--muted);font-size:13px;margin-top:6px}
+    .table{width:100%;border-collapse:collapse;margin-top:10px}
+    .table th,.table td{padding:10px;text-align:left;border-bottom:1px solid #eef2f7;font-size:14px}
+    .btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;display:inline-block}
+    .flex{display:flex;gap:12px;align-items:center}
+    @media(max-width:900px){.grid{grid-template-columns:repeat(1,1fr)}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h1>GETCASH Affiliate Dashboard</h1>
+        <div style="font-size:14px;opacity:.95">Welcome back — <strong id="userEmail">Guest</strong></div>
       </div>
     </div>
-  );
-}
+  </header>
+
+  <main class="container">
+    <section class="grid">
+      <div class="card">
+        <div class="metric" id="totalEarnings">Ksh 0</div>
+        <div class="label">Total Earnings</div>
+      </div>
+      <div class="card">
+        <div class="metric" id="activeReferrals">0</div>
+        <div class="label">Active Referrals</div>
+      </div>
+      <div class="card">
+        <div class="metric" id="conversionRate">0%</div>
+        <div class="label">Conversion Rate</div>
+      </div>
+    </section>
+
+    <section style="margin-top:20px" class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">Recent Referrals</h3>
+        <div class="flex">
+          <a class="btn" id="withdrawBtn">Withdraw</a>
+          <a class="btn" id="campaignsBtn" style="background:#2563eb">View Campaigns</a>
+        </div>
+      </div>
+
+      <table class="table" id="referralsTable" style="margin-top:14px">
+        <thead>
+          <tr><th>Name</th><th>Email</th><th>Phone</th><th>Paid</th><th>Payment Ref</th></tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="5" style="opacity:.6">Loading referrals…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section style="margin-top:20px" class="card">
+      <h3 style="margin-top:0">Quick Links</h3>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <a class="btn" href="/pay.html">Make a Payment</a>
+        <a class="btn" href="/dashboard.html">Dashboard</a>
+        <a class="btn" href="/login.html" style="background:#374151">Sign Out</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+    const supabaseUrl = 'https://jfdotsvfxtqrwcmpramg.supabase.co'
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmZG90c3ZmeHRxcndjbXByYW1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDQ1MzIsImV4cCI6MjA2MzY4MDUzMn0.TkiD437ReQ8xc7J8wCB68oOZdxqPU-ltvuFAzAF5ypY'
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    // Simple dashboard logic: fetch users table rows and compute basic metrics.
+    async function loadDashboard() {
+      try {
+        // If you have authentication in your app, replace this with current user's email/id
+        const email = localStorage.getItem('user_email') || ''
+        if (email) document.getElementById('userEmail').innerText = email
+
+        // Fetch users (or referrals) from Supabase - adapt table name to your schema
+        const { data: users, error } = await supabase.from('users').select('*').order('id', { ascending: false }).limit(20)
+        if (error) throw error
+
+        // Show referrals table
+        const tbody = document.querySelector('#referralsTable tbody')
+        tbody.innerHTML = ''
+        let total = 0
+        let paidCount = 0
+        users.forEach(u => {
+          const paid = !!u.payment_ref
+          if (paid) paidCount++
+          const row = document.createElement('tr')
+          row.innerHTML = `
+            <td>${u.full_name || ''}</td>
+            <td>${u.email || ''}</td>
+            <td>${u.phone || ''}</td>
+            <td>${paid ? 'Yes' : 'No'}</td>
+            <td>${u.payment_ref || '-'}</td>
+          `
+          tbody.appendChild(row)
+
+          // Example: if you store commission amount in u.commission
+          total += Number(u.commission || 0)
+        })
+
+        document.getElementById('totalEarnings').innerText = `Ksh ${total.toLocaleString()}`
+        document.getElementById('activeReferrals').innerText = users.length
+        const conversion = users.length ? Math.round((paidCount / users.length) * 100) : 0
+        document.getElementById('conversionRate').innerText = `${conversion}%`
+
+      } catch (err) {
+        console.error('Dashboard load error', err)
+        const tbody = document.querySelector('#referralsTable tbody')
+        tbody.innerHTML = `<tr><td colspan="5" style="color:#b91c1c">Failed to load data: ${err.message}</td></tr>`
+      }
+    }
+
+    document.getElementById('withdrawBtn').addEventListener('click', () => {
+      alert('Withdraw action - implement server-side payout or paystack transfer here')
+    })
+
+    document.getElementById('campaignsBtn').addEventListener('click', () => {
+      // Placeholder: link to campaign management or promotional creatives
+      alert('Open campaigns manager (not implemented yet)')
+    })
+
+    // Run on load
+    loadDashboard()
+  </script>
+</body>
+</html>
