@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pay KSh 1000000</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Kenyan_Shilling_notes.jpg/1200px-Kenyan_Shilling_notes.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      backdrop-filter: blur(4px);
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #555;
+      text-align: center;
+    }
+
+    h2 {
+      color: #1a7f37;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #1a7f37;
+      color: white;
+      padding: 12px 24px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #145b28;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pay KSh 1000000</h2>
+    <form id="paymentForm">
+      <input type="text" id="phone" placeholder="Enter phone number" required />
+      <button type="submit">Pay Now</button>
+    </form>
+  </div>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    const paymentForm = document.getElementById('paymentForm');
+    paymentForm.addEventListener("submit", payWithPaystack, false);
+
+    function payWithPaystack(e) {
+      e.preventDefault();
+
+      let phone = document.getElementById("phone").value;
+
+      let handler = PaystackPop.setup({
+        key: 'pk_live_170d64a2ef9a487becb9e3e7e892c7f9fd3b0306', // Replace with your real public key
+        email: phone + "@placeholder.com", // We fake an email using phone number
+        amount: 80 * 100,
+        currency: "KES",
+        callback: function(response) {
+          alert("Payment successful. Ref: " + response.reference);
+        },
+        onClose: function() {
+          alert("Transaction cancelled");
+        }
+      });
+
+      handler.openIframe();
+    }
+  </script>
+</body>
+
+</html>

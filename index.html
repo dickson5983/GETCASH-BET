@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GETCASH | Welcome</title>
+  <title>GETCASH | Earn Money Online</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: white;
       display: flex;
       flex-direction: column;
@@ -19,51 +21,112 @@
       text-align: center;
     }
 
-    h1 {
-      font-size: 2.5rem;
+    .hero-container {
+      max-width: 800px;
+      padding: 20px;
+    }
+
+    .logo-large {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #00c851;
+      letter-spacing: -2px;
       margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      font-weight: 300;
     }
 
     p {
-      margin-bottom: 30px;
-      font-size: 1.2rem;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 40px;
     }
 
-    .buttons a {
-      display: inline-block;
-      margin: 10px;
-      padding: 12px 25px;
-      font-size: 1rem;
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
       background-color: #00c851;
       color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 200, 81, 0.3);
     }
 
-    .buttons a:hover {
+    .btn-primary:hover {
       background-color: #007e33;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      border: 2px solid #334155;
+      color: white;
+    }
+
+    .btn-outline:hover {
+      background: #334155;
+    }
+
+    .features {
+      margin-top: 60px;
+      display: flex;
+      gap: 30px;
+      color: #00c851;
+      font-size: 0.9rem;
+      font-weight: bold;
     }
 
     footer {
       position: absolute;
-      bottom: 20px;
-      font-size: 0.9rem;
-      color: #bbb;
+      bottom: 30px;
+      color: #475569;
+      font-size: 0.8rem;
     }
   </style>
 </head>
-<body>
-  <h1>Welcome to GETCASH</h1>
-  <p>Your gateway to earning through blogging, memes, ads, and more.</p>
 
-  <div class="buttons">
-    <a href="register.html">Register</a>
-    <a href="login.html">Login</a>
+<body>
+
+  <div class="hero-container">
+    <div class="logo-large">GETCASH</div>
+    <h1>The Ultimate Kenyan Earning Platform</h1>
+    <p>
+      Join thousands of Kenyans earning daily through <b>M-Pesa</b> by writing blogs,
+      sharing memes, and completing simple online tasks.
+    </p>
+
+    <div class="btn-group">
+      <a href="register.html" class="btn btn-primary">Get Started Now</a>
+      <a href="login.html" class="btn btn-outline">Member Login</a>
+    </div>
+
+    <div class="features">
+      <span><i class="fas fa-bolt"></i> Instant Payouts</span>
+      <span><i class="fas fa-check-circle"></i> Verified Tasks</span>
+      <span><i class="fas fa-phone"></i> 24/7 Support</span>
+    </div>
   </div>
 
   <footer>
-    &copy; 2025 GETCASH. All rights reserved.
+    &copy; 2026 GETCASH KENYA. All rights reserved.
   </footer>
+
 </body>
+
 </html>

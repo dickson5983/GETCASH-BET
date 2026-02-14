@@ -1,121 +1,142 @@
-<!DOCTYPE html><html lang="en"><head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GetCash Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GETCASH | Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
-    }.login-container {
-  background: white;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 100%;
-  animation: fadeInUp 0.7s ease-in-out;
-}
+    }
 
-.login-container h2 {
-  margin-bottom: 20px;
-  text-align: center;
-  color: #2a5298;
-}
+    .login-box {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 40px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-.form-group {
-  margin-bottom: 20px;
-}
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #00c851;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 30px;
+    }
 
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-  color: #333;
-}
+    h2 {
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
 
-.form-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  transition: border-color 0.3s;
-}
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
 
-.form-group input:focus {
-  border-color: #2a5298;
-  outline: none;
-}
+    input::placeholder {
+      color: #94a3b8;
+    }
 
-.btn {
-  background: #2a5298;
-  color: white;
-  border: none;
-  padding: 12px;
-  width: 100%;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
+    .btn-login {
+      background-color: #00c851;
+      color: white;
+      border: none;
+      padding: 15px;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+    }
 
-.btn:hover {
-  background: #1e3c72;
-}
+    .btn-login:hover {
+      background-color: #007e33;
+    }
 
-.footer {
-  text-align: center;
-  margin-top: 16px;
-  color: #fff;
-}
+    .links {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .links a {
+      color: #00c851;
+      text-decoration: none;
+    }
 
+    .back-home {
+      margin-top: 30px;
+      display: block;
+      font-size: 0.8rem;
+      color: #475569;
+      text-decoration: none;
+    }
   </style>
-</head><body>
-  <div class="login-container">
-    <h2>Login to GetCash</h2>
+</head>
+
+<body>
+
+  <div class="login-box">
+    <a href="index.html" class="logo">GETCASH</a>
+    <h2>Welcome Back</h2>
+
     <form id="loginForm">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" required />
-      </div>
-      <button type="submit" class="btn">Login</button>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="password" id="password" placeholder="Password" required>
+
+      <button type="submit" class="btn-login">Login to Account</button>
     </form>
-  </div>  <script>
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
+
+    <div class="links">
+      Don't have an account? <a href="register.html">Register here</a>
+    </div>
+
+    <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
 
-      // Hardcoded admin credentials
-      const adminEmail = "dicksonmutinda06@gmail.com";
-      const adminPassword = "admin123";
+      // Simple simulation of login success
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('password').value;
 
-      if (email === adminEmail && password === adminPassword) {
+      if (email && pass) {
+        // Redirect to dashboard
         window.location.href = "dashboard.html";
       } else {
-        alert("Invalid credentials. Please try again.");
+        alert("Please fill in all fields.");
       }
     });
-  </script></body></html>
+  </script>
+
+</body>
+
+</html>

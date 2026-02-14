@@ -8,8 +8,8 @@ callback: function (response) {
     },
     body: JSON.stringify({ reference: response.reference })
   })
-  .then(res => res.json())
-  .then(data => {
-    alert(data.message);
-  });
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+    });
 } 

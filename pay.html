@@ -1,93 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pay KSh 1000000</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Kenyan_Shilling_notes.jpg/1200px-Kenyan_Shilling_notes.jpg') no-repeat center center fixed;
-      background-size: cover;
-      margin: 0;
-      padding: 0;
-      backdrop-filter: blur(4px);
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.9);
-      max-width: 400px;
-      margin: 100px auto;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #555;
-      text-align: center;
-    }
-
-    h2 {
-      color: #1a7f37;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-
-    button {
-      background-color: #1a7f37;
-      color: white;
-      padding: 12px 24px;
-      margin-top: 20px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #145b28;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Pay KSh 1000000</h2>
-    <form id="paymentForm">
-      <input type="text" id="phone" placeholder="Enter phone number" required />
-      <button type="submit">Pay Now</button>
-    </form>
-  </div>
-
-  <script src="https://js.paystack.co/v1/inline.js"></script>
-  <script>
-    const paymentForm = document.getElementById('paymentForm');
-    paymentForm.addEventListener("submit", payWithPaystack, false);
-
-    function payWithPaystack(e) {
-      e.preventDefault();
-
-      let phone = document.getElementById("phone").value;
-
-      let handler = PaystackPop.setup({
-        key: 'pk_live_170d64a2ef9a487becb9e3e7e892c7f9fd3b0306', // Replace with your real public key
-        email: phone + "@placeholder.com", // We fake an email using phone number
-        amount: 80 * 100,
-        currency: "KES",
-        callback: function(response) {
-          alert("Payment successful. Ref: " + response.reference);
-        },
-        onClose: function() {
-          alert("Transaction cancelled");
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay KSh 100,000</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-      });
 
-      handler.openIframe();
-    }
-  </script>
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #1a7f37;
+            margin-bottom: 1.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #1a7f37;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #145b28;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>Pay KSh 100,000</h2>
+        <form id="paymentForm">
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="tel" id="phone" placeholder="2547XXXXXXXX" required>
+            <button type="submit">Pay Now</button>
+        </form>
+    </div>
+
+    <script src="https://js.paystack.co/v2/inline.js"></script>
+
+    <script>
+        const paymentForm = document.getElementById('paymentForm');
+
+        paymentForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+
+            // 100,000 KES = 10,000,000 subunits
+            const amount = 100000 * 100;
+
+            const paystack = new PaystackPop();
+            paystack.newTransaction({
+                // YOUR LIVE PUBLIC KEY
+                key: 'pk_live_976d99fd957145cdb38cdac9d50753863e0f3d63',
+                email: email,
+                amount: amount,
+                currency: "KES",
+                // Specifically enables M-Pesa for Kenya
+                channels: ['mobile_money', 'card', 'bank_transfer'],
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Phone Number", variable_name: "phone_number", value: phone }
+                    ]
+                },
+                onSuccess: (transaction) => {
+                    alert("Payment Success! Reference: " + transaction.reference);
+                },
+                onCancel: () => {
+                    alert("You closed the payment window.");
+                },
+                onError: (error) => {
+                    // This will show exactly why the 'Invalid Merchant' error is happening
+                    alert("Paystack Error: " + error.message);
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>
