@@ -1,0 +1,93 @@
+/* style.css */
+body {
+    background: #000;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    opacity: 0.4;
+}
+
+/* THE LUMINOUS BOX */
+.auth-card {
+    position: relative;
+    z-index: 10;
+    width: 380px;
+    padding: 40px;
+    background: rgba(0, 10, 0, 0.95);
+    border-radius: 8px;
+    text-align: center;
+    /* Animated Luminous Border */
+    border: 2px solid #0f0;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2),
+        inset 0 0 10px rgba(0, 255, 0, 0.1);
+    animation: luminous 4s infinite alternate;
+}
+
+@keyframes luminous {
+    0% {
+        box-shadow: 0 0 10px #0f0, inset 0 0 5px #0f0;
+        border-color: #0f0;
+    }
+
+    50% {
+        box-shadow: 0 0 30px #00ffcc, inset 0 0 15px #00ffcc;
+        border-color: #00ffcc;
+    }
+
+    100% {
+        box-shadow: 0 0 10px #0f0, inset 0 0 5px #0f0;
+        border-color: #0f0;
+    }
+}
+
+h2 {
+    color: #0f0;
+    letter-spacing: 8px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #0f0;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: rgba(0, 40, 0, 0.2);
+    border: 1px solid #0f0;
+    color: #0f0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background: #0f0;
+    color: #000;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #fff;
+    box-shadow: 0 0 20px #fff;
+}
+
+a {
+    color: #0f0;
+    text-decoration: none;
+    font-size: 0.8rem;
+}

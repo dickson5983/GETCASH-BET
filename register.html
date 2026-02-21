@@ -1,92 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GETCASH | Register Terminal</title>
-  <style>
-    /* Shared Styles */
-    body {
-      background: #000;
-      color: #0f0;
-      font-family: 'Courier New', monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .auth-card {
-      width: 350px;
-      padding: 40px;
-      border: 1px solid #0f0;
-      background: rgba(0, 10, 0, 0.9);
-      box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-      text-align: center;
-    }
-
-    h2 {
-      letter-spacing: 5px;
-      margin-bottom: 30px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      background: #000;
-      border: 1px solid #0f0;
-      color: #0f0;
-      outline: none;
-      box-sizing: border-box;
-    }
-
-    input::placeholder {
-      color: #050;
-    }
-
-    button {
-      width: 100%;
-      padding: 15px;
-      background: #0f0;
-      color: #000;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      text-transform: uppercase;
-    }
-
-    button:hover {
-      background: #fff;
-      box-shadow: 0 0 10px #fff;
-    }
-
-    p {
-      font-size: 0.8rem;
-      margin-top: 20px;
-      color: #666;
-    }
-
-    a {
-      color: #0f0;
-      text-decoration: none;
-      border-bottom: 1px solid #0f0;
-    }
-  </style>
+  <title>GETCASH | Register</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
+  <canvas id="matrix"></canvas>
   <div class="auth-card">
     <h2>REGISTER</h2>
-    <input type="email" id="regEmail" placeholder="OPERATOR EMAIL">
+    <input type="email" id="regEmail" placeholder="NEW OPERATOR EMAIL">
     <input type="password" id="regPass" placeholder="SET SECURITY KEY">
-    <button onclick="handleRegister()">Create Account</button>
-    <p>Registered? <a href="login.html">Return to Login</a></p>
+    <button onclick="handleRegister()">CREATE OPERATOR</button>
+    <p><a href="login.html">ALREADY REGISTERED? LOGIN</a></p>
   </div>
 
+  <script>
+    // (Copy/Paste the same Matrix script from login.html here)
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const rainDrops = Array.from({ length: columns }).fill(1);
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+        rainDrops[i]++;
+      }
+    }
+    setInterval(draw, 30);
+  </script>
   <script src="register.js"></script>
 </body>
 
