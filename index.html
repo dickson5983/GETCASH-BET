@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GETCASH - Secure Access</title>
+  <title>GETCASH | Secure Portal</title>
   <style>
+    /* Matrix Theme Styling */
     body {
       background: #000;
       margin: 0;
@@ -22,59 +23,68 @@
       opacity: 0.3;
     }
 
-    .login-box {
+    .container {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
-      width: 350px;
+      width: 90%;
+      max-width: 500px;
       padding: 40px;
       background: rgba(0, 0, 0, 0.9);
       border: 2px solid #0f0;
-      box-shadow: 0 0 20px #0f0;
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
       text-align: center;
     }
 
-    h2 {
-      letter-spacing: 5px;
-      margin-bottom: 30px;
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 12px;
+      margin-bottom: 10px;
       text-shadow: 0 0 10px #0f0;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      background: #000;
+    p {
+      letter-spacing: 2px;
+      color: #888;
+      margin-bottom: 30px;
+      font-size: 0.8rem;
+    }
+
+    .menu-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 15px;
+      background: transparent;
       border: 1px solid #0f0;
       color: #0f0;
-      outline: none;
-      box-sizing: border-box;
-      text-align: center;
-    }
-
-    button {
-      width: 100%;
-      padding: 15px;
-      background: #0f0;
-      color: #000;
-      border: none;
+      text-decoration: none;
       font-weight: bold;
-      cursor: pointer;
       text-transform: uppercase;
       transition: 0.3s;
+      cursor: pointer;
     }
 
-    button:hover {
-      background: #fff;
-      box-shadow: 0 0 15px #fff;
+    .btn:hover {
+      background: #0f0;
+      color: #000;
+      box-shadow: 0 0 20px #0f0;
     }
 
-    .version {
+    .btn-main {
+      background: #0f0;
+      color: #000;
+    }
+
+    .footer {
+      margin-top: 30px;
       font-size: 0.6rem;
-      margin-top: 20px;
-      color: #444;
+      color: #333;
     }
   </style>
 </head>
@@ -83,49 +93,70 @@
 
   <canvas id="matrix"></canvas>
 
-  <div class="login-box">
-    <h2>GETCASH</h2>
-    <input type="text" id="accessCode" placeholder="ENTER ACCESS CODE" autocomplete="off">
-    <button onclick="checkAccess()">Initialize Engine</button>
-    <div class="version">SECURE SIGNAL ENGINE v4.0.26</div>
+  <div class="container">
+    <h1>GETCASH</h1>
+    <p>SUPERFAST SIGNAL ENGINE v4.0</p>
+
+    <div class="menu-stack" id="menu">
+    </div>
+
+    <div class="footer">STREAMS ENCRYPTED VIA DERIV API</div>
   </div>
 
   <script>
-    // MATRIX RAIN LOGIC
+    // --- MATRIX ANIMATION ---
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%";
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$#@%";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
-    const rainDrops = Array.from({ length: columns }).fill(1);
+    const drops = Array(Math.floor(columns)).fill(1);
 
     function draw() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#0F0";
       ctx.font = fontSize + "px monospace";
-      for (let i = 0; i < rainDrops.length; i++) {
-        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-        rainDrops[i]++;
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
       }
     }
-    setInterval(draw, 40);
+    setInterval(draw, 35);
 
-    // ACCESS LOGIC
-    function checkAccess() {
-      const code = document.getElementById('accessCode').value;
-      // You can set your own code here. I'll use "ADMIN80" as an example.
-      if (code === "ADMIN80") {
-        window.location.href = "dashboard.html";
+    // --- ACCESS LOGIC ---
+    function checkStatus() {
+      const menu = document.getElementById('menu');
+      const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+
+      if (isLoggedIn) {
+        // User is logged in: Show Dashboard access
+        menu.innerHTML = `
+                <a href="dashboard.html" class="btn btn-main">Launch Dashboard</a>
+                <button onclick="logout()" class="btn">Logout Operator</button>
+            `;
       } else {
-        alert("ACCESS DENIED: INVALID ENCRYPTION KEY");
+        // User is NOT logged in: Show Login/Register
+        menu.innerHTML = `
+                <a href="login.html" class="btn btn-main">Operator Login</a>
+                <a href="register.html" class="btn">Register New Terminal</a>
+            `;
       }
     }
+
+    function logout() {
+      sessionStorage.removeItem("isLoggedIn");
+      location.reload();
+    }
+
+    // Run check on load
+    window.onload = checkStatus;
   </script>
+
 </body>
 
 </html>
