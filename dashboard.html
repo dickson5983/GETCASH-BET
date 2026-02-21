@@ -3,174 +3,246 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GETCASH | Live Betting</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <title>GETCASH - Pro Matrix Analyzer</title>
   <style>
-    :root {
-      --sp-blue: #004a99;
-      --sp-dark: #1b2631;
-      --sp-green: #4caf50;
-      --sp-bg: #f0f2f5;
-    }
-
     body {
+      background: #000;
       margin: 0;
-      display: grid;
-      grid-template-columns: 220px 1fr 320px;
-      font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
-      background: var(--sp-bg);
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
     }
 
-    /* Sidebar */
-    .sidebar {
-      background: var(--sp-dark);
-      color: white;
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      opacity: 0.4;
+    }
+
+    /* Main UI Container */
+    .card {
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #0f0;
       padding: 20px;
-    }
-
-    .balance-box {
-      background: #2c3e50;
-      padding: 15px;
+      width: 450px;
       border-radius: 8px;
-      margin: 20px 0;
-      border-left: 4px solid var(--sp-green);
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      text-align: center;
     }
 
-    /* Main Content */
-    .content {
-      overflow-y: auto;
-      padding: 15px;
-    }
-
-    .match-row {
-      background: white;
-      margin-bottom: 2px;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .team-info {
-      width: 45%;
+    .header {
+      border-bottom: 1px solid #0f0;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      color: #fff;
+      letter-spacing: 2px;
       font-weight: bold;
     }
 
-    .odds-group {
-      display: flex;
-      gap: 8px;
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
     }
 
-    .odd-btn {
-      width: 65px;
-      height: 45px;
-      border: 1px solid #ddd;
-      background: #fff;
-      font-weight: 900;
-      cursor: pointer;
-      border-radius: 4px;
+    label {
+      font-size: 0.75rem;
+      color: #0f0;
+      display: block;
+      margin-bottom: 5px;
     }
 
-    .odd-btn:hover {
-      background: var(--sp-blue);
-      color: white;
-    }
-
-    /* Betslip */
-    .betslip {
-      background: white;
-      border-left: 1px solid #ccc;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .slip-head {
-      background: var(--sp-blue);
-      color: white;
-      padding: 15px;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    #slip-list {
-      flex: 1;
+    select,
+    input {
+      width: 100%;
       padding: 10px;
-      overflow-y: auto;
+      background: #000;
+      color: #0f0;
+      border: 1px solid #0f0;
+      outline: none;
+      box-sizing: border-box;
     }
 
-    .slip-item {
-      background: #f9f9f9;
-      border: 1px solid #eee;
-      padding: 10px;
-      margin-bottom: 8px;
-      position: relative;
-      font-size: 0.9rem;
-    }
-
-    .summary {
-      padding: 20px;
-      background: #e9ecef;
-      border-top: 2px solid #ddd;
-    }
-
-    .place-btn {
+    button {
       width: 100%;
       padding: 15px;
-      background: var(--sp-green);
-      color: white;
+      background: #0f0;
+      color: #000;
       border: none;
       font-weight: bold;
-      border-radius: 4px;
       cursor: pointer;
-      font-size: 1.1rem;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    /* Result Box - Matches your reference image */
+    #resultOverlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      border: 2px solid #0f0;
+      padding: 25px;
+      box-sizing: border-box;
+      z-index: 20;
+      box-shadow: 0 0 30px #0f0;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #f00;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .dashboard-text {
+      color: #0f0;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .entry-point {
+      font-size: 1.4rem;
+      color: #fff;
+      margin: 15px 0;
+      border-left: 3px solid #0f0;
+      padding-left: 10px;
     }
   </style>
 </head>
 
 <body>
 
-  <aside class="sidebar">
-    <h2 style="color: var(--sp-green);">GETCASH</h2>
-    <div class="balance-box">
-      <small>My Balance</small><br>
-      <strong id="balance-display">KSh 0.00</strong>
-    </div>
-    <div style="margin-top:30px; color:#888;">TOP LEAGUES</div>
-    <p><i class="fas fa-futbol"></i> Premier League</p>
-    <p><i class="fas fa-futbol"></i> La Liga</p>
-  </aside>
+  <canvas id="matrix"></canvas>
 
-  <main class="content">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h3>Live & Upcoming Matches</h3>
-      <button onclick="fetchGames()" style="padding:5px 10px; cursor:pointer;"><i class="fas fa-sync"></i>
-        Refresh</button>
-    </div>
-    <div id="match-display">Loading real games...</div>
-  </main>
+  <div class="card">
+    <div class="header">SIGNAL ANALYZER</div>
 
-  <aside class="betslip">
-    <div class="slip-head">BET SLIP <span id="slip-count"
-        style="background:#fff; color:var(--sp-blue); padding:2px 8px; border-radius:10px;">0</span></div>
-    <div id="slip-list">Your slip is empty. Click on odds to start.</div>
-    <div class="summary">
-      <div style="display:flex; justify-content:space-between;"><span>Total Odds:</span> <b id="total-odds">1.00</b>
+    <div class="input-group">
+      <label>SELECT MARKET</label>
+      <select id="market">
+        <option value="R_10">VOLATILITY 10 INDEX</option>
+        <option value="R_50">VOLATILITY 50 INDEX</option>
+        <option value="R_100">VOLATILITY 100 INDEX</option>
+      </select>
+    </div>
+
+    <div style="display: flex; gap: 10px;" class="input-group">
+      <div style="flex: 1;">
+        <label>TYPE</label>
+        <select id="type">
+          <option value="over">OVER</option>
+          <option value="under">UNDER</option>
+        </select>
       </div>
-      <input type="number" id="stake" placeholder="Stake Amount"
-        style="width:100%; padding:10px; margin:15px 0; box-sizing:border-box;" oninput="calculateWin()">
-      <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>Possible Win:</span> <b
-          id="win-display" style="color:var(--sp-green)">KSh 0.00</b></div>
-      <button class="place-btn" onclick="handlePlaceBet()">PLACE BET</button>
+      <div style="flex: 1;">
+        <label>PREDICTION (0-8)</label>
+        <input type="number" id="pred" value="5" min="0" max="8">
+      </div>
     </div>
-  </aside>
 
-  <script src="dashboard.js"></script>
+    <button onclick="startAnalysis()">Analyse</button>
+
+    <div id="resultOverlay">
+      <span class="close-btn" onclick="document.getElementById('resultOverlay').style.display='none'">[CLOSE]</span>
+      <div id="output" class="dashboard-text"></div>
+    </div>
+  </div>
+
+  <script>
+    // --- MATRIX RAIN ANIMATION ---
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const rainDrops = Array.from({ length: columns }).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+        rainDrops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 40);
+
+    // --- ANALYSIS LOGIC ---
+    let ws;
+    function startAnalysis() {
+      if (ws) ws.close();
+      const output = document.getElementById('output');
+      const overlay = document.getElementById('resultOverlay');
+      const market = document.getElementById('market').value;
+      const type = document.getElementById('type').value;
+      const pred = parseInt(document.getElementById('pred').value);
+
+      overlay.style.display = "block";
+      output.innerHTML = `<p style="color:#fff">System: Authenticating...</p><p>Scanning Market: ${market}...</p>`;
+
+      ws = new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=1089');
+      let ticks = [];
+
+      ws.onopen = () => ws.send(JSON.stringify({ ticks: market }));
+
+      ws.onmessage = (msg) => {
+        const data = JSON.parse(msg.data);
+        if (data.tick) {
+          ticks.push(parseInt(data.tick.quote.toString().slice(-1)));
+          // Clear raw data logs and show progress instead
+          output.innerHTML = `<p>Analyzing ${market}</p><p>Scanning Ticks: [${ticks.length}/20]</p>`;
+
+          if (ticks.length >= 20) {
+            ws.close();
+            processResult(ticks, type, pred, market);
+          }
+        }
+      };
+    }
+
+    function processResult(data, type, pred, market) {
+      const output = document.getElementById('output');
+      const wins = type === 'over' ? data.filter(d => d > pred).length : data.filter(d => d < pred).length;
+      const prob = (wins / data.length) * 100;
+
+      // Output formatted like your reference image
+      if (prob >= 80) {
+        output.innerHTML = `
+            <div style="border-bottom: 1px solid #0f0; padding-bottom: 10px; margin-bottom: 10px;">
+                <span style="color: #fff">Analysis Dashboard - ${type.toUpperCase()} ${pred} on ${market}</span>
+            </div>
+            <h2 style="color: #0f0; margin: 10px 0;">Analysis Complete!</h2>
+            <p>${type.toUpperCase()} (${pred}) with ${prob.toFixed(2)}% Confidence</p>
+            <div class="entry-point">Entry Points: ${data.slice(-3).join(', ')}</div>
+            <p style="background: #0f0; color: #000; display: inline-block; padding: 5px 15px; font-weight: bold;">RUNNING BOT NOW...</p>
+        `;
+      } else {
+        output.innerHTML = `
+            <h2 style="color: #f00;">NO FAVORABLE MARKET</h2>
+            <p>Confidence Level: ${prob.toFixed(2)}%</p>
+            <hr style="border: 0.5px solid #444; margin: 20px 0;">
+            <p style="font-size: 1.1rem; color: #fff;">PLEASE TRY SCANNING AGAIN</p>
+        `;
+      }
+    }
+  </script>
 </body>
 
 </html>

@@ -1,36 +1,58 @@
-// 1. CONFIGURATION (Updated with your key)
-const SPORTMONKS_KEY = 'NCM4qMj2F0f4R1PT7W4xNpsnaPXrIHUCH4RrnXOC2AJtspO8OJXpUN6UkbZM';
-const SUPABASE_URL = 'https://odqewjsvlrvbacngwvdr.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_xSAX11P58adkAc02kKHyIg_H28GboKA';
+let derivWS;
+let tickData = [];
 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+function startAnalysis() {
+    const market = document.getElementById('marketSelect').value;
+    const status = document.getElementById('status');
+    const signalDisplay = document.getElementById('signalResult');
 
-// 2. UPDATED FETCH FUNCTION
-async function fetchGames() {
-    const display = document.getElementById('match-display');
-    const today = new Date().toISOString().split('T')[0]; // Format: 2026-02-14
+    // Close old connection if it exists
+    if (derivWS) derivWS.close();
+    tickData = [];
 
-    // Using the 'fixtures/date' endpoint ensures the page isn't blank if no games are "live"
-    const url = `https://api.sportmonks.com/v3/football/fixtures/date/${today}?api_token=${SPORTMONKS_KEY}&include=participants;odds`;
+    status.innerHTML = `Scanning ${market}...`;
+    signalDisplay.innerHTML = "Gathering Data...";
+    signalDisplay.style.color = "#888";
 
-    try {
-        const response = await fetch(url);
+    // Connect to Deriv API
+    derivWS = new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=1089');
 
-        if (!response.ok) {
-            // This will help you see if it's a 401 (Wrong Key) or 403 (Plan issue)
-            throw new Error(`API returned status ${response.status}`);
+    derivWS.onopen = () => {
+        derivWS.send(JSON.stringify({ "ticks": market }));
+    };
+
+    derivWS.onmessage = (msg) => {
+        const data = JSON.parse(msg.data);
+        if (data.tick) {
+            const price = data.tick.quote;
+            const lastDigit = parseInt(price.toString().slice(-1));
+
+            document.getElementById('latestTick').innerHTML = `Price: ${price} | Digit: <b style="color:#fff">${lastDigit}</b>`;
+
+            tickData.push(lastDigit);
+            if (tickData.length > 20) tickData.shift();
+
+            if (tickData.length >= 15) {
+                checkSignal(price);
+            }
         }
+    };
+}
 
-        const result = await response.json();
+function checkSignal(currentPrice) {
+    const signalDisplay = document.getElementById('signalResult');
 
-        if (!result.data || result.data.length === 0) {
-            display.innerHTML = "<p>No games found for today. Check your Sportmonks plan coverage.</p>";
-            return;
-        }
+    // Logic: If last 15 ticks show more than 55% "Over 5"
+    const overFive = tickData.filter(d => d > 5).length;
+    const probability = (overFive / tickData.length) * 100;
 
-        renderGames(result.data); // Your function to show games on UI
-    } catch (err) {
-        console.error("Connection Error:", err);
-        display.innerHTML = `<div style="color:red;"><b>Connection Error:</b> ${err.message}. <br>Make sure you are using a Local Server (Live Server).</div>`;
+    if (probability >= 55) {
+        signalDisplay.innerHTML = `🚀 ENTRY POINT FOUND!<br>Price: ${currentPrice}<br>ACTION: RUN TRADING BOT NOW`;
+        signalDisplay.style.color = "#00ff00";
+        signalDisplay.style.border = "2px solid #00ff00";
+    } else {
+        signalDisplay.innerHTML = "❌ TRY ANOTHER ANALYSIS";
+        signalDisplay.style.color = "#ff4444";
+        signalDisplay.style.border = "1px dashed #444";
     }
 }
