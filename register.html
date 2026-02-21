@@ -4,133 +4,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GETCASH | Register</title>
+  <title>GETCASH | Register Terminal</title>
   <style>
+    /* Shared Styles */
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: white;
+      background: #000;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
+      margin: 0;
     }
 
-    .reg-box {
-      background: rgba(255, 255, 255, 0.1);
+    .auth-card {
+      width: 350px;
       padding: 40px;
-      border-radius: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      width: 100%;
-      max-width: 400px;
+      border: 1px solid #0f0;
+      background: rgba(0, 10, 0, 0.9);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
       text-align: center;
     }
 
     h2 {
-      margin-bottom: 20px;
-      color: #00c851;
+      letter-spacing: 5px;
+      margin-bottom: 30px;
     }
 
     input {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
+      margin-bottom: 20px;
+      background: #000;
+      border: 1px solid #0f0;
+      color: #0f0;
+      outline: none;
       box-sizing: border-box;
     }
 
-    .fee-note {
-      font-size: 0.9rem;
-      color: #ddd;
-      margin: 15px 0;
+    input::placeholder {
+      color: #050;
     }
 
-    #regButton {
-      background-color: #00c851;
-      color: white;
-      border: none;
-      padding: 15px;
+    button {
       width: 100%;
-      border-radius: 8px;
+      padding: 15px;
+      background: #0f0;
+      color: #000;
+      border: none;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s;
-      margin-top: 10px;
+      text-transform: uppercase;
     }
 
-    #regButton:hover {
-      background-color: #007e33;
+    button:hover {
+      background: #fff;
+      box-shadow: 0 0 10px #fff;
+    }
+
+    p {
+      font-size: 0.8rem;
+      margin-top: 20px;
+      color: #666;
+    }
+
+    a {
+      color: #0f0;
+      text-decoration: none;
+      border-bottom: 1px solid #0f0;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="reg-box">
-    <h2>Create Account</h2>
-    <form id="registrationForm">
-      <input type="text" id="fullname" placeholder="Full Name" required>
-      <input type="email" id="email" placeholder="Email Address" required>
-      <input type="tel" id="phone" placeholder="2547XXXXXXXX" required>
-      <input type="password" id="password" placeholder="Create Password" required>
-
-      <p class="fee-note">Registration Fee: <b>KSh 100,000</b></p>
-
-      <button type="submit" id="regButton">Pay & Register</button>
-    </form>
+  <div class="auth-card">
+    <h2>REGISTER</h2>
+    <input type="email" id="regEmail" placeholder="OPERATOR EMAIL">
+    <input type="password" id="regPass" placeholder="SET SECURITY KEY">
+    <button onclick="handleRegister()">Create Account</button>
+    <p>Registered? <a href="login.html">Return to Login</a></p>
   </div>
 
-  <script src="https://js.paystack.co/v2/inline.js"></script>
-
-  <script>
-    const registrationForm = document.getElementById('registrationForm');
-
-    registrationForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value;
-      const name = document.getElementById("fullname").value;
-
-      // Amount in KES subunits (100,000 * 100)
-      const amount = 100000 * 100;
-
-      const paystack = new PaystackPop();
-      paystack.newTransaction({
-        // Your Live Public Key as provided
-        key: 'pk_live_976d99fd957145cdb38cdac9d50753863e0f3d63',
-        email: email,
-        amount: amount,
-        currency: "KES",
-        channels: ['mobile_money', 'card', 'bank_transfer'],
-        metadata: {
-          custom_fields: [
-            { display_name: "Full Name", variable_name: "full_name", value: name },
-            { display_name: "Phone Number", variable_name: "phone_number", value: phone }
-          ]
-        },
-        onSuccess: (transaction) => {
-          // Step 1: Tell the user it worked
-          alert("Payment Successful! Welcome to GETCASH.");
-
-          // Step 2: Send data to your backend to save the user
-          // Example: window.location.href = "success.php?ref=" + transaction.reference;
-        },
-        onCancel: () => {
-          alert("Registration cancelled. Payment is required to join.");
-        },
-        onError: (error) => {
-          alert("System Error: " + error.message);
-        }
-      });
-    });
-  </script>
-
+  <script src="register.js"></script>
 </body>
 
 </html>
