@@ -3,25 +3,139 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>GETCASH | Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GETCASH | Secure Login</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #000;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      margin: 0;
+    }
+
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      opacity: 0.3;
+    }
+
+    .terminal-wrapper {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .luminous-box {
+      width: 380px;
+      padding: 40px;
+      background: rgba(0, 15, 0, 0.95);
+      border: 2px solid #00ffcc;
+      box-shadow: 0 0 20px #00ffcc;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #00ffcc;
+      letter-spacing: 5px;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      background: rgba(0, 30, 0, 0.5);
+      border: 1px solid #00ffcc;
+      color: #fff;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.3s;
+      text-transform: uppercase;
+    }
+
+    button:hover {
+      background: #fff;
+      box-shadow: 0 0 20px #fff;
+    }
+
+    .footer-links {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: #00ffcc;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #fff;
+    }
+  </style>
 </head>
 
 <body>
-  <canvas id="matrix"></canvas>
-  <div class="auth-card">
-    <h2>LOGIN</h2>
-    <form id="loginForm">
-      <input type="email" id="loginEmail" placeholder="OPERATOR EMAIL" required>
-      <input type="password" id="loginPass" placeholder="SECURITY KEY" required>
-      <button type="submit">VERIFY IDENTITY</button>
-    </form>
-    <div id="loginMsg" style="color: #f00; margin-top: 15px; font-size: 0.8rem;"></div>
-    <p><a href="register.html">REQUEST NEW ACCESS</a></p>
+
+  <canvas id="matrix-canvas"></canvas>
+
+  <div class="terminal-wrapper">
+    <div class="luminous-box">
+      <h2>SYSTEM LOGIN</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="OPERATOR EMAIL" required>
+        <input type="password" id="loginPass" placeholder="SECURITY KEY" required>
+        <button type="submit">AUTHORIZE ACCESS</button>
+      </form>
+
+      <div id="loginMsg" style="margin-top: 20px; font-size: 0.85rem; color: #ff4444;"></div>
+
+      <div class="footer-links">
+        NEW OPERATOR? <a href="register.html">REQUEST ACCESS</a>
+      </div>
+    </div>
   </div>
 
   <script type="module" src="login.js"></script>
-  <script src="matrix.js"></script>
+  <script>
+    // Matrix Rain Effect (Matches Register Page)
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const chars = "01010101ABCDEFHIJKLMN";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ffcc";
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 35);
+  </script>
 </body>
 
 </html>
