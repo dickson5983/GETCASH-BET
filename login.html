@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
   <title>GETCASH | Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -10,38 +11,17 @@
   <canvas id="matrix"></canvas>
   <div class="auth-card">
     <h2>LOGIN</h2>
-    <input type="email" id="loginEmail" placeholder="OPERATOR ID">
-    <input type="password" id="loginPass" placeholder="ACCESS KEY">
-    <button onclick="handleLogin()">VERIFY IDENTITY</button>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="OPERATOR EMAIL" required>
+      <input type="password" id="loginPass" placeholder="SECURITY KEY" required>
+      <button type="submit">VERIFY IDENTITY</button>
+    </form>
+    <div id="loginMsg" style="color: #f00; margin-top: 15px; font-size: 0.8rem;"></div>
     <p><a href="register.html">REQUEST NEW ACCESS</a></p>
   </div>
 
-  <script>
-    // Matrix Rain logic
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const rainDrops = Array.from({ length: columns }).fill(1);
-
-    function draw() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#0F0";
-      ctx.font = fontSize + "px monospace";
-      for (let i = 0; i < rainDrops.length; i++) {
-        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-        rainDrops[i]++;
-      }
-    }
-    setInterval(draw, 30);
-  </script>
-  <script src="login.js"></script>
+  <script type="module" src="login.js"></script>
+  <script src="matrix.js"></script>
 </body>
 
 </html>

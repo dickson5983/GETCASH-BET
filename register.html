@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
   <title>GETCASH | Register</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -10,37 +11,23 @@
   <canvas id="matrix"></canvas>
   <div class="auth-card">
     <h2>REGISTER</h2>
-    <input type="email" id="regEmail" placeholder="NEW OPERATOR EMAIL">
-    <input type="password" id="regPass" placeholder="SET SECURITY KEY">
-    <button onclick="handleRegister()">CREATE OPERATOR</button>
+    <form id="registerForm">
+      <input type="text" id="name" placeholder="FULL NAME" required>
+      <input type="email" id="email" placeholder="OPERATOR EMAIL" required>
+      <input type="text" id="phone" placeholder="PHONE NUMBER" required>
+      <input type="password" id="password" placeholder="SET SECURITY KEY" required>
+      <input type="text" id="referral" placeholder="REFERRAL CODE (OPTIONAL)">
+
+      <button type="submit">CREATE OPERATOR</button>
+    </form>
+    <div id="status" style="color: #0f0; margin-top: 15px; font-size: 0.8rem;"></div>
+    <div id="msg" style="color: #f00; margin-top: 10px; font-size: 0.8rem;"></div>
     <p><a href="login.html">ALREADY REGISTERED? LOGIN</a></p>
   </div>
 
-  <script>
-    // (Copy/Paste the same Matrix script from login.html here)
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const rainDrops = Array.from({ length: columns }).fill(1);
-    function draw() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#0F0";
-      ctx.font = fontSize + "px monospace";
-      for (let i = 0; i < rainDrops.length; i++) {
-        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-        rainDrops[i]++;
-      }
-    }
-    setInterval(draw, 30);
-  </script>
-  <script src="register.js"></script>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script type="module" src="register.js"></script>
+  <script src="matrix.js"></script>
 </body>
 
 </html>

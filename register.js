@@ -14,46 +14,34 @@ if (form) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('name')?.value?.trim();
-    const email = document.getElementById('email')?.value?.trim();
-    const phone = document.getElementById('phone')?.value?.trim();
-    const password = document.getElementById('password')?.value?.trim();
-    const referral = document.getElementById('referral')?.value || '';
+    const email = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const referral = document.getElementById('referral').value;
 
-    if (!name || !email || !phone || !password) {
-      if (msgEl) msgEl.innerText = "Please fill all fields.";
-      return;
-    }
-
-    if (statusEl) statusEl.textContent = 'Initializing Secure Payment...';
+    statusEl.textContent = 'Initializing Payment...';
 
     const handler = PaystackPop.setup({
       key: paystackPublicKey,
       email: email,
-      amount: 5000, // Updated: 50.00 KES (50 * 100)
+      amount: 5000, // 50 KES
       currency: 'KES',
       callback: async function (response) {
-        if (statusEl) statusEl.textContent = 'Payment successful! Creating account...';
+        statusEl.textContent = 'Payment successful! Finalizing registration...';
 
-        try {
-          const { data, error } = await supabase.auth.signUp({ email, password });
-          if (error) throw error;
+        const { data, error } = await supabase.auth.signUp({ email, password });
 
-          await supabase.from('users').insert([{
-            email,
-            phone,
-            referral,
-            payment_ref: response.reference,
-            full_name: name
-          }]);
-
-          if (statusEl) statusEl.textContent = 'Registration Complete! Redirecting...';
-          setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-        } catch (err) {
-          if (msgEl) msgEl.innerText = 'Error: ' + err.message;
+        if (!error) {
+          await supabase.from('users').insert([
+            { email, phone, referral, full_name: name, payment_ref: response.reference }
+          ]);
+          window.location.href = "login.html";
+        } else {
+          msgEl.innerText = "Error: " + error.message;
         }
       },
-      onClose: () => { if (statusEl) statusEl.textContent = 'Payment cancelled.'; }
+      onClose: () => { statusEl.textContent = 'Payment cancelled.'; }
     });
     handler.openIframe();
   });
